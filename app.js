@@ -41,7 +41,7 @@ var M=null;
 function pick(id){S.sel=id;var e=$("#mc");if(e)e.innerHTML=mcard()}
 function initMap(){var el=$("#map");if(!el)return;M=null;var c=P.filter(function(p){return p.ll&&(S.cat=="Все"||p.c==S.cat)});
 if(KEY&&window.mapgl){var s=pl(S.sel);M=new mapgl.Map("map",{center:s&&s.ll?[s.ll[1],s.ll[0]]:[83.7765,53.348],zoom:s&&s.ll?15:12,key:KEY});c.forEach(function(p){new mapgl.Marker(M,{coordinates:[p.ll[1],p.ll[0]]}).on("click",function(){pick(p.id)})})}
-else if(window.L){var q=pl(S.sel);M=L.map("map").setView(q&&q.ll?q.ll:[53.348,83.7765],q&&q.ll?15:12);L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(M);c.forEach(function(p){L.marker(p.ll).addTo(M).on("click",function(){pick(p.id)})})}
+else if(window.L){var q=pl(S.sel);M=L.map("map").setView(q&&q.ll?q.ll:[53.348,83.7765],q&&q.ll?15:12);M.attributionControl.setPrefix(false);L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(M);c.forEach(function(p){L.marker(p.ll).addTo(M).on("click",function(){pick(p.id)})})}
 else el.innerHTML='<p class="mut" style="padding:20px">Карта не загрузилась: проверьте интернет.</p>'}
 function geoOne(p){var q=encodeURIComponent("Барнаул, "+p.addr),b="https://catalog.api.2gis.com/3.0/items",u=[b+"/geocode?q="+q+"&fields=items.point&key="+KEY,b+"?q="+encodeURIComponent("Барнаул "+p.n)+"&fields=items.point&key="+KEY];
 return u.reduce(function(pr,url){return pr.then(function(r){if(r)return r;return fetch(url).then(function(x){return x.json()}).then(function(j){var it=j.result&&j.result.items&&j.result.items.filter(function(i){return i.point})[0];return it?[it.point.lat,it.point.lon]:null}).catch(function(){return null})})},Promise.resolve(null))}
